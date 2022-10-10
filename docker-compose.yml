@@ -1,0 +1,62 @@
+version: '3.7'
+services:
+
+  #PHP Service
+  app:
+    build:
+      args:
+        user: jean
+        uid: 1000
+      context: .
+      dockerfile: Dockerfile
+    image: tests-and-ddd
+    container_name: test-ddd
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+       - ./:/var/www
+       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - test-ddd-network
+
+  #Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: test-ddd-nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - 8001:80
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - test-ddd-network
+
+  #Postgres Service
+  dbtestes:  
+    image: postgres:12.0-alpine  
+    container_name: db
+    restart: unless-stopped 
+    tty: true
+    environment:  
+      POSTGRES_PASSWORD: postgres_senha
+      POSTGRES_DB: gaia  
+      SERVICE_TAGS: dev
+      SERVICE_NAME: postgres
+    volumes:  
+      - "./.docker/dbdata:/var/lib/postgresql/data"
+    ports:
+       - "5432:5432"
+    networks:
+      - test-ddd-network
+
+#Docker Networks
+networks:
+  test-ddd-network:
+    driver: bridge
