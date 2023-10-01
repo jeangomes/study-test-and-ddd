@@ -21,4 +21,19 @@ class MeuPrimeiroTest extends TestCase
         // Null, agora a caixa está vazia
         $this->assertNull($caixa->pegarUm());
     }
+
+    public function testComecaComLetra()
+    {
+        $caixa = new Caixa(['cooler', 'mouse', 'fone', 'celular', 'computador']);
+
+        $results = $caixa->comecaCom('c');
+
+        $this->assertCount(3, $results);
+        $this->assertContains('cooler', $results);
+        $this->assertContains('celular', $results);
+        $this->assertContains('computador', $results);
+
+        // Vai devolver um array vazio
+        $this->assertEmpty($caixa->comecaCom('s'));
+    }
 }
