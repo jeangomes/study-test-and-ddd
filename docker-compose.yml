@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - 8001:80
+      - "8001:80"
       - "443:443"
     volumes:
       - ./:/var/www
@@ -39,17 +39,17 @@ services:
       - test-ddd-network
 
   #Postgres Service
-  dbtestes:  
-    image: postgres:12.0-alpine  
+  dbtestes:
+    image: postgres:12.0-alpine
     container_name: db
-    restart: unless-stopped 
+    restart: unless-stopped
     tty: true
-    environment:  
+    environment:
       POSTGRES_PASSWORD: postgres_senha
-      POSTGRES_DB: gaia  
+      POSTGRES_DB: gaia
       SERVICE_TAGS: dev
       SERVICE_NAME: postgres
-    volumes:  
+    volumes:
       - "./.docker/dbdata:/var/lib/postgresql/data"
     ports:
        - "5432:5432"
