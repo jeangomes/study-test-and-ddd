@@ -10,6 +10,10 @@ class Purchase extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'amount' => 'float',
+    ];
+
     public function items(): HasMany
     {
         return $this->hasMany(PurchaseItem::class);
