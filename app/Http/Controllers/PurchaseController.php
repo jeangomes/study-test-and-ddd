@@ -17,11 +17,23 @@ class PurchaseController extends Controller
         return view('purchase.create');
     }
 
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $purchases = Purchase::query()->withCount('items')->orderBy('purchased_at')->get();
-        return response()->json(['purchases' => $purchases]);
-        //return view('purchase.index', ['purchases' => $purchases]);
+        $date = $request->input('filter');
+        $store = $request->input('filter2');
+        $nfce = $request->input('filter3');
+        $purchases = Purchase::query()->withCount('items')->orderByDesc('purchased_at')
+            ->when($date, function ($query, string $date) {
+                $query->whereDate('purchased_at', '=', $date);
+            })
+            ->when($store, function ($query, string $store) {
+                $query->where('store', 'ilike', '%'.$store.'%');
+            })
+            ->when($nfce, function ($query, string $nfce) {
+                $query->where('nfce_key_access', '=', $nfce);
+            })
+            ->paginate(20);
+        return response()->json($purchases);
     }
 
     public function show(Purchase $purchase): JsonResponse
@@ -45,8 +57,9 @@ class PurchaseController extends Controller
             $purchase->nfce_key_access = $request->input('nfce_key_access');
             $purchase->save();
             $make = new ProcessDataPurchase();
-            $records = $make->handle($request->input('content_write'));
-            $purchase->items()->createMany($records);
+            $recordsProcessed = $make->handle($request->input('content_write'));
+
+            $purchase->items()->createMany($recordsProcessed);
         });
         //return redirect('/purchase');
         return response()->json([

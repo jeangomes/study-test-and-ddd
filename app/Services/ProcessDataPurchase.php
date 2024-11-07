@@ -34,7 +34,7 @@ class ProcessDataPurchase
         $records = [];
         $amount = 0;
         foreach ($linesToProcess as $line){
-            dump($line);
+            //dd($line);
             $record = $this->applyRegex($line);
             $records[] = $record;
             $amount= $amount+$record['total_price'];
@@ -42,8 +42,8 @@ class ProcessDataPurchase
 
         //dump(array_keys($records[0]),$records);
 
-        dump('Total: '.$amount);
-        dump('total items:' . count($records));
+        //dump('Total: '.$amount);
+        //dump('total items:' . count($records));
         //dd(789);
         return $records;
     }
@@ -72,6 +72,7 @@ class ProcessDataPurchase
             ];
         } else {
             echo "Failed to extract data from the input string.\n";
+            exit();
             return [];
         }
     }

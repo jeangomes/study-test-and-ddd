@@ -17,7 +17,8 @@ return new class extends Migration
             $table->dateTime('purchased_at');
             $table->dateTime('paid_at');
             $table->decimal('amount', 10, 2);
-            $table->text('nfce_key_access');
+            $table->text('nfce_key_access')->nullable();
+            $table->decimal('tax', 10, 2)->nullable();
             $table->timestamps();
         });
     }

@@ -21,6 +21,10 @@ return new class extends Migration {
             $table->decimal('total_price', 10, 2);
             $table->timestamps();
         });
+
+        Schema::table('purchase_items', function (Blueprint $table) {
+            $table->foreign('purchase_id')->references('id')->on('purchases');
+        });
     }
 
     /**

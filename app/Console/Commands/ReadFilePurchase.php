@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Purchase;
 use Illuminate\Console\Command;
 
 class ReadFilePurchase extends Command
@@ -24,12 +25,12 @@ class ReadFilePurchase extends Command
      * Execute the console command.
      *
      */
-    public function handle(): void
+    public function handle()
     {
         //$this->applyRegex();
         //dd(85);
         //////////////////////////
-        $filename = resource_path('compra-sacolao-13-05-2023.txt');
+        $filename = resource_path('opa.txt');
         $file = fopen( $filename, "r" );
 
         if(!$file) {
@@ -47,8 +48,6 @@ class ReadFilePurchase extends Command
                 $replaceBarraT = str_replace("\t"," ",$replaceBarraN);
                 $lineFull = $lineFull . $replaceBarraT;
                 if ($lineCounter == 3) {
-                    //dump($lineFull);
-                    //$this->info($lineFull);
                     $linesToProcess[] = $lineFull;
                     $lineCounter = 0;
                     $lineFull = '';
@@ -65,9 +64,11 @@ class ReadFilePurchase extends Command
             $records[] = $record;
             $amount= $amount+$record['total_price'];
         }
+
         $this->table(array_keys($records[0]),$records);
 
         $this->info('Total: '.$amount);
+        $this->info('total items:' . count($records));
         //return Command::SUCCESS;
     }
 
