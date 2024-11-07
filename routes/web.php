@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use Illuminate\Foundation\Application;
 use App\Http\Controllers\PurchaseController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,4 +20,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('purchase', PurchaseController::class);
+//Route::resource('purchase', PurchaseController::class);
